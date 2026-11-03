@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>بنك الإجابات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+   الصق الكود ده مكان كل الستايل القديم اللي في index.html
+   ============================================================ */
+    @import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+    
+    :root {
+      color-scheme: dark;
+      --bg: #080c18;
+      --surface: #0f1629;
+      --ink: #e8edfa;
+      --text: #cbd4ec;
+      --muted: #8c98b8;
+      --line: #1e2842;
+      --line-strong: #33426a;
+      /* لون كل مادة */
+      --py: #7db4ff;
+      --js: #f0c75e;
+      --mun: #b9a2ff;
+      --main: #6fd8bd;
+      --radius: 16px;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0
+    }
+    
+    html {
+      scroll-behavior: smooth
+    }
+    
+    body {
+      font-family: 'Readex Pro', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.8;
+      font-weight: 400;
+    }
+    
+    ::selection {
+      background: rgba(125, 180, 255, .3)
+    }
+    
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+    
+    :focus-visible {
+      outline: 2px solid var(--py);
+      outline-offset: 3px;
+      border-radius: 6px
+    }
+    
+    /* ---------- السماء: سديم خفيف ونجوم ثابتة ---------- */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        radial-gradient(ellipse 70% 45% at 90% -8%, rgba(88, 108, 226, .20), transparent 65%),
+        radial-gradient(ellipse 60% 40% at -5% 105%, rgba(118, 84, 200, .14), transparent 65%),
+        radial-gradient(circle at 40px 70px, rgba(255, 255, 255, .85) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 190px 190px, rgba(176, 204, 255, .7) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 90px 250px, rgba(255, 255, 255, .55) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 280px 40px, rgba(255, 255, 255, .8) 0 1.3px, transparent 2px),
+        radial-gradient(circle at 60px 340px, rgba(176, 204, 255, .6) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 330px 220px, rgba(255, 255, 255, .65) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 150px 90px, rgba(255, 240, 210, .7) 0 1.2px, transparent 1.9px),
+        radial-gradient(circle at 400px 380px, rgba(255, 255, 255, .5) 0 1px, transparent 1.6px);
+      background-size:
+        auto, auto,
+        260px 260px, 260px 260px,
+        340px 340px, 340px 340px,
+        430px 430px, 430px 430px,
+        560px 560px, 560px 560px;
+    }
+    
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 20px 80px
+    }
+    
+    /* ---------- الشريط العلوي ---------- */
+    .bar {
+      border-bottom: 1px solid var(--line);
+      background: rgba(8, 12, 24, .72);
+      backdrop-filter: blur(8px);
+      margin-bottom: 44px;
+      position: sticky;
+      top: 0;
+      z-index: 20
+    }
+    
+    .bar-in {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+    
+    .brand {
+      font-weight: 500;
+      color: var(--ink);
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+    
+    .brand::before {
+      content: "";
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #bcd6ff, #4f78d8 70%);
+      box-shadow: 0 0 0 4px rgba(125, 180, 255, .12);
+    }
+    
+    .back {
+      border: 1px solid var(--line-strong);
+      background: transparent;
+      color: var(--ink);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: .9rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: border-color .15s, background .15s
+    }
+    
+    .back:hover {
+      border-color: var(--py);
+      background: rgba(125, 180, 255, .08)
+    }
+    
+    /* ---------- الرئيسية ---------- */
+    h1.hero {
+      font-size: clamp(1.7rem, 5vw, 2.3rem);
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.5;
+      margin-bottom: 4px
+    }
+    
+    .sub {
+      color: var(--muted);
+      margin-bottom: 34px;
+      font-weight: 300
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px
+    }
+    
+    @media(max-width:560px) {
+      .grid {
+        gap: 12px
+      }
+    }
+    
+    .tile {
+      background: linear-gradient(180deg, rgba(20, 29, 53, .75), rgba(13, 19, 36, .75));
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 26px 16px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: border-color .2s, transform .2s
+    }
+    
+    .tile:hover {
+      border-color: color-mix(in srgb, var(--c) 55%, var(--line));
+      transform: translateY(-3px)
+    }
+    
+    .tile h2 {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-top: 10px
+    }
+    
+    .tile .meta {
+      color: var(--muted);
+      font-size: .86rem;
+      font-weight: 300
+    }
+    
+    .tile .go {
+      margin-top: 14px;
+      font-size: .88rem;
+      font-weight: 400;
+      color: var(--c);
+      border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
+      padding: 3px 18px;
+      border-radius: 999px;
+      transition: background .2s
+    }
+    
+    .tile:hover .go {
+      background: color-mix(in srgb, var(--c) 14%, transparent)
+    }
+    
+    /* الأيقونة = كوكب صغير ومدار حواليه */
+    .mono {
+      position: relative;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #1d2a4d, #0b1121 75%);
+      border: 1px solid color-mix(in srgb, var(--c) 45%, var(--line));
+      color: var(--ink);
+      display: grid;
+      place-items: center;
+      font: 500 1rem 'JetBrains Mono', monospace;
+      margin-bottom: 12px;
+    }
+    
+    .mono::after {
+      content: "";
+      position: absolute;
+      inset: -9px;
+      border-radius: 50%;
+      border: 1px dashed color-mix(in srgb, var(--c) 30%, transparent);
+      pointer-events: none;
+    }
+    
+    .mono::before {
+      content: "";
+      position: absolute;
+      left: 62px;
+      top: 2px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--c);
+      box-shadow: 0 0 8px color-mix(in srgb, var(--c) 70%, transparent);
+    }
+    
+    .mono img {
+      width: 56%;
+      height: 56%;
+      object-fit: contain;
+      border-radius: 6px
+    }
+    
+    .mono svg {
+      width: 50%;
+      height: 50%;
+      stroke: var(--c)
+    }
+    
+    .mono svg circle {
+      fill: var(--c)
+    }
+    
+    /* ---------- صفحة المادة ---------- */
+    .head {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 6px 6px 26px;
+      margin-bottom: 22px;
+      border-bottom: 1px solid var(--line)
+    }
+    
+    .head .mono {
+      margin: 0;
+      flex: none
+    }
+    
+    .head h1 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.4
+    }
+    
+    .head .meta {
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 300
+    }
+    
+    .search {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 11px 20px;
+      font-family: inherit;
+      font-size: .97rem;
+      font-weight: 300;
+      background: rgba(15, 22, 41, .8);
+      margin-bottom: 22px;
+      outline: none;
+      color: var(--ink);
+      transition: border-color .15s, box-shadow .15s
+    }
+    
+    .search::placeholder {
+      color: var(--muted)
+    }
+    
+    .search:focus {
+      border-color: var(--c);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 18%, transparent)
+    }
+    
+    details {
+      background: rgba(15, 22, 41, .7);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 12px
+    }
+    
+    summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 13px 18px;
+      font-weight: 500;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: inherit
+    }
+    
+    summary::-webkit-details-marker {
+      display: none
+    }
+    
+    summary::after {
+      content: "";
+      margin-inline-start: auto;
+      width: 7px;
+      height: 7px;
+      border-inline-end: 1.5px solid var(--muted);
+      border-bottom: 1.5px solid var(--muted);
+      transform: rotate(45deg);
+      transition: transform .2s
+    }
+    
+    details[open]>summary::after {
+      transform: rotate(-135deg)
+    }
+    
+    details.ch {
+      border-inline-start: 2px solid var(--c)
+    }
+    
+    details.ch>summary {
+      font-size: 1.02rem
+    }
+    
+    details.ch[open] {
+      border-color: color-mix(in srgb, var(--c) 40%, var(--line));
+      border-inline-start-color: var(--c)
+    }
+    
+    details.ch[open]>summary {
+      border-bottom: 1px solid var(--line);
+      border-radius: var(--radius) var(--radius) 0 0
+    }
+    
+    .count {
+      background: rgba(255, 255, 255, .04);
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: .74rem;
+      padding: 0 10px;
+      font-weight: 400;
+      line-height: 1.7
+    }
+    
+    .inner {
+      padding: 14px
+    }
+    
+    .lesson-title {
+      font-weight: 500;
+      color: var(--c);
+      font-size: .9rem;
+      margin: 10px 4px 10px
+    }
+    
+    details.q {
+      border-radius: 12px;
+      margin-bottom: 10px;
+      background: rgba(7, 11, 22, .55)
+    }
+    
+    details.q>summary {
+      font-weight: 400;
+      padding: 9px 14px;
+      font-size: .9rem;
+      color: var(--muted)
+    }
+    
+    /* ---------- الإجابة (بتتنسخ بالضغط) ---------- */
+    .ans {
+      padding: 0 12px 12px
+    }
+    
+    .ans pre {
+      background: #060a15;
+      color: #d6e4ff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      font: 400 .86rem/1.7 'JetBrains Mono', monospace;
+      direction: ltr;
+      text-align: left;
+      white-space: pre
+    }
+    
+    .ans .txt {
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 16px;
+      line-height: 1.95;
+      white-space: pre-wrap;
+      color: var(--text)
+    }
+    
+    .ans pre,
+    .ans .txt {
+      cursor: pointer;
+      transition: border-color .15s, opacity .15s
+    }
+    
+    .ans pre:hover,
+    .ans .txt:hover {
+      border-color: var(--c)
+    }
+    
+    .ans .copied {
+      opacity: .65
+    }
+    
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 44px 10px;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      font-weight: 300
+    }
+    
+    #toast {
+      position: fixed;
+      bottom: 26px;
+      left: 50%;
+      transform: translate(-50%, 16px);
+      background: var(--ink);
+      color: #0a0f1e;
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-size: .9rem;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s, transform .2s;
+      z-index: 50
+    }
+    
+    #toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0)
+    }
+    
+    /* ---------- موبايل ---------- */
+    @media(max-width:560px) {
+      .wrap {
+        padding: 0 14px 70px
+      }
+      
+      .bar {
+        margin-bottom: 30px
+      }
+      
+      .tile {
+        padding: 22px 10px 16px;
+        border-radius: 18px
+      }
+      
+      .tile h2 {
+        font-size: 1.05rem
+      }
+      
+      .head {
+        gap: 18px
+      }
+    }
+    
+    @media(prefers-reduced-motion:reduce) {
+      * {
+        transition: none !important;
+        scroll-behavior: auto !important
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bar">
+    <div class="bar-in">
+      <a class="brand" href="#/">بنك الإجابات - إعداد عمرو الحديدي</a>
+      <button class="back" id="backBtn" style="display:none" onclick="location.hash='#/'">الرئيسية</button>
+    </div>
+  </div>
+  <div class="wrap">
+    <div id="app"></div>
+  </div>
+  
+  <script src="py.js"></script>
+  <script src="js.js"></script>
+  <script src="mun.js"></script>
+  <script>
+    const MAIN_URL = "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=CAESUgHrOzAVUedo3y7zE0vtKNQwZEOc7OVs_pacaGJ2J32fPayJF4YIqODNpR9mEARA-GKj1gCmZApXasKiK1_VgZTlNvrRGgd21PwwXAS9HGhbYos&ved=2ahUKEwicyf3C8euXAxVHRv4FHbI4Jj0QFnoECBAQAQ&uoh=1&usg=AOvVaw3y_9S-8uw-auE4dMS0qvGD";
+    
+    const WALLET_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8V6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5V8"/><rect x="2.5" y="8" width="19" height="12" rx="3"/><circle cx="16.5" cy="14" r="1.2" fill="#7c3aed"/></svg>`;
+    
+    const SUBJECTS = {
+      py: { title: "Python", img: "py.png", icon: "Py", color: "var(--py)", unit: "فصل", kind: "code", data: typeof PY_DATA !== "undefined" ? PY_DATA : null, btn: "فتح الإجابات" },
+      js: { title: "JavaScript", img: "js.png", icon: "JS", color: "var(--js)", unit: "فصل", kind: "code", data: typeof JS_DATA !== "undefined" ? JS_DATA : null, btn: "فتح الإجابات" },
+      mun: { title: "التثقيف المالي", svg: WALLET_SVG, icon: "$", color: "var(--mun)", unit: "فصل", kind: "text", data: typeof MUN_DATA !== "undefined" ? MUN_DATA : null, btn: "فتح الدروس" }
+    };
+    const MAIN_ICON = { img: "main.png", icon: "↗" };
+    
+    function iconEl(s, extra) {
+      const box = h("div", { class: "mono" + (extra ? " " + extra : "") });
+      if (s.svg) { box.innerHTML = s.svg; return box; }
+      if (s.img) {
+        const img = h("img", { src: s.img, alt: "" });
+        img.onerror = () => {
+          img.remove();
+          box.textContent = s.icon;
+        };
+        box.append(img);
+      } else box.textContent = s.icon;
+      return box;
+    }
+    
+    const $app = document.getElementById("app");
+    const backBtn = document.getElementById("backBtn");
+    
+    function h(tag, attrs = {}, ...kids) {
+      const el = document.createElement(tag);
+      for (const [k, v] of Object.entries(attrs)) {
+        if (k === "class") el.className = v;
+        else if (k.startsWith("on")) el[k] = v;
+        else el.setAttribute(k, v);
+      }
+      kids.flat().forEach(c => c != null && el.append(c.nodeType ? c : document.createTextNode(c)));
+      return el;
+    }
+    
+    let toastTimer;
+    
+    function toast(msg) {
+      let t = document.getElementById("toast");
+      if (!t) {
+        t = h("div", { id: "toast" });
+        document.body.append(t);
+      }
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove("show"), 1400);
+    }
+    async function copyText(text, el) {
+      let ok = false;
+      try {
+        await navigator.clipboard.writeText(text);
+        ok = true;
+      }
+      catch {
+        try {
+          const ta = h("textarea", { style: "position:fixed;opacity:0" });
+          ta.value = text;
+          document.body.append(ta);
+          ta.select();
+          ok = document.execCommand("copy");
+          ta.remove();
+        } catch {}
+      }
+      if (ok && el) {
+        el.classList.add("copied");
+        setTimeout(() => el.classList.remove("copied"), 400);
+      }
+      toast(ok ? "تم النسخ" : "تعذر النسخ");
+    }
+    
+    function groupsOf(ch) {
+      const norm = x => typeof x === "string" ? { q: null, a: x } : x;
+      if (ch.lessons) return ch.lessons.map(l => ({ name: l.name, items: (l.answers || []).map(norm) }));
+      return [{ name: null, items: (ch.questions || []).map(norm) }];
+    }
+    
+    function countItems(ch) { return groupsOf(ch).reduce((n, g) => n + g.items.length, 0); }
+    
+    function totals(data) {
+      const chs = (data && data.chapters) || [];
+      return {
+        chapters: chs.length,
+        lessons: chs.reduce((n, c) => n + (c.lessons ? c.lessons.length : 0), 0),
+        answers: chs.reduce((n, c) => n + countItems(c), 0)
+      };
+    }
+    
+    function metaText(key) {
+      const s = SUBJECTS[key],
+        t = totals(s.data);
+      if (key === "mun") return `${t.lessons || t.chapters} درس · ${t.answers} إجابة`;
+      return `${t.chapters} ${s.unit} · ${t.answers} إجابة`;
+    }
+    
+    function renderHome() {
+      backBtn.style.display = "none";
+      const tile = (key) => {
+        const s = SUBJECTS[key];
+        return h("div", { class: "tile", style: `--c:${s.color}`, onclick: () => location.hash = "#/" + key },
+          iconEl(s),
+          h("h2", {}, s.title),
+          h("div", { class: "meta" }, metaText(key)),
+          h("div", { class: "go" }, s.btn));
+      };
+      const main = h("a", { class: "tile", href: MAIN_URL, style: "--c:var(--main)" },
+        iconEl(MAIN_ICON),
+        h("h2", {}, ""),
+        h("div", { class: "meta" }, "منصه SPRIX"),
+        h("div", { class: "go" }, "فتح SPRIX"));
+      
+      $app.replaceChildren(
+        h("h1", { class: "hero" }, "بنك الإجابات"),
+        h("p", { class: "sub" }, "اختار المنصه الـ عايز تخلصها و خش علي Sprix"),
+        h("div", { class: "grid" }, tile("py"), tile("js"), tile("mun"), main)
+      );
+    }
+    
+    function renderSubject(key) {
+      const s = SUBJECTS[key];
+      if (!s) return renderHome();
+      backBtn.style.display = "";
+      const chapters = (s.data && s.data.chapters) || [];
+      
+      const search = h("input", { class: "search", type: "search", placeholder: "بحث في الأسئلة والإجابات" });
+      const list = h("div");
+      const head = h("div", { class: "head" },
+        iconEl(s),
+        h("div", {}, h("h1", {}, s.title), h("div", { class: "meta" }, metaText(key))));
+      
+      $app.replaceChildren(h("div", { style: `--c:${s.color}` }, head, search, list));
+      
+      function draw(term) {
+        term = term.trim().toLowerCase();
+        list.replaceChildren();
+        let shown = 0;
+        chapters.forEach((ch, ci) => {
+          const groups = groupsOf(ch).map(g => ({
+            ...g,
+            items: g.items.filter(it => !term || ((it.q || "") + " " + (it.a || "") + " " + (g.name || "") + " " + ch.name).toLowerCase().includes(term))
+          })).filter(g => g.items.length);
+          if (!groups.length) return;
+          
+          const total = groups.reduce((n, g) => n + g.items.length, 0);
+          const inner = h("div", { class: "inner" });
+          groups.forEach(g => {
+            if (g.name) inner.append(h("div", { class: "lesson-title" }, g.name));
+            g.items.forEach((it, i) => {
+              const label = it.q || `الإجابة ${i+1}`;
+              const body = s.kind === "code" ? h("pre", {}, h("code", {}, it.a)) : h("div", { class: "txt" }, it.a);
+              
+              body.title = "اضغط للنسخ";
+              body.onclick = () => {
+                if (String(window.getSelection()).length) return;
+                copyText(it.a, body);
+              };
+              const d = h("details", { class: "q" }, h("summary", {}, label), h("div", { class: "ans" }, body));
+              d.open = true;
+              inner.append(d);
+            });
+          });
+          const d = h("details", { class: "ch" },
+            h("summary", {}, ch.name || `${s.unit} ${ci+1}`, h("span", { class: "count" }, total)),
+            inner);
+          if (term) d.open = true;
+          list.append(d);
+          shown++;
+        });
+        if (!shown) list.append(h("div", { class: "empty" }, chapters.length ? "لا توجد نتائج مطابقة" : "لا توجد إجابات بعد — ألصقها في ملف " + key + ".js"));
+      }
+      search.addEventListener("input", () => draw(search.value));
+      draw("");
+    }
+    
+    function route() {
+      const key = (location.hash.replace(/^#\/?/, "") || "").trim();
+      key ? renderSubject(key) : renderHome();
+      window.scrollTo(0, 0);
+    }
+    window.addEventListener("hashchange", route);
+    route();
+  </script>
+</body>
+
+</html>
